@@ -3,15 +3,7 @@ package tictactoe;
 import java.util.*;
 
 public class main {
-    public static void displayBoard(char[][] board){
-        for(int i = 0; i<board.length ;i++){
-            for (int j = 0; j <board.length; j++) {
-                System.out.print(board[i][j]);
-                
-            }
-            System.out.println();
-        }
-    }
+    
     public static void main(String[] args) {
         int n = 3;
         char[][] board = new char[n][n];
@@ -34,48 +26,63 @@ public class main {
         }
         displayBoard(board);
         while(true){
-            
+            char sym;
+            int countOfMoves = 0;
             //accoring to the player turn we will ask
-            //the outer whileloop will make the gameplay continue till rither player win
+            //the outer whileloop will make the gameplay continue till either player win
             // the inner whileoop will continue until you are taking the input
+            int r;
+            int c;
             while(true){
                 if(turn){
                     System.out.println("Player 1, please make your turn :");
                 } else{
                     System.out.println("Player 2, please make your turn :");
                 }
-                char sym;
+                
                 if(turn){
                     sym ='X';
                 } else{
                     sym = 'O';
                 }
 
-                System.out.println("please input the row");
-                int r = sc.nextInt();
-                System.out.println("Please input the col");
-                int c = sc.nextInt();
+                System.out.println("please input the row and col");
+                r = sc.nextInt();
+                // System.out.println("Please input the col");
+                c = sc.nextInt();
     
                 if(r<0 || r>=n || c<0 || c>=n){
-                    System.out.println("invalid movve! please try again");
+                    System.out.println("invalid move! please try again");
                 } else if(board[r][c] != '-'){
                     System.out.println("This cell is already occupied!");
                 } else {
                     board[r][c] = sym;
-                    break;
+                    countOfMoves++;
+                    break; // work of this loop is only to obtain the valid input
+                    // as soon as the work is complete the loop breaks and checkwinner function check the board...
                 }
             }
-            if(checkWinner(board , sym)){
-                System.out.println("Winner is " + sym);
+            // if(checkWinner(board , sym)){
+            //     System.out.println("Winner(n^2) is " + sym);
+            //     break;
+            // } else if (countOfMoves == 9){
+            //     System.out.println("Draw(n^2)");
+            //     break;
+            // }
+
+            if(checkWinner_n(board, sym, r, c)){
+                System.out.println("Winner(n) is " + sym);
                 break;
             } else if (countOfMoves == 9){
-                System.out.println("Draw");
+                System.out.println("Draw(n)");
                 break;
             }
             
-
+            
+            displayBoard(board);
             turn =! turn;
         }
+       
         
         
     }
@@ -85,14 +92,58 @@ public class main {
         n^3 -> n^2 -> n -> 1 `x
     */ 
     public static boolean checkWinner(char[][] board, char sym){
-        
-        for(int i = 0 ; i<board.length;i++){
+        //time complexity -> O(n^2)
+        for(int i = 0 ; i<board.length; i++){
             if(board[i][0] == sym && board[i][0] == board[i][1] && board[i][1] == board[i][2]){
                 return true;
             } else if(board[0][i] == sym && board[0][i] == board[1][i] && board[1][i] == board[2][i]){
                 return true;
             }
-            //diagonal HW:
+        }
+        if(board[0][0] == sym && board[1][1] == sym && board[2][2] ==sym){
+            return true;
+        }
+        if(board[0][2] == sym && board[1][1] == sym && board[2][0] ==sym){
+            return true;
+        }
+        return false;
+    }
+    //asdasd
+    public static boolean checkWinner_n(char[][] board, char sym, int r, int c){
+        boolean flag = true;
+
+        for(int i = 0 ; i<board.length-1 ; i++){
+            if(board[r][i] != board[r][i+1]){
+                flag = false;
+                break;
+            }
+        }
+        if(flag == true) return true;
+
+        for(int i = 0 ; i<board.length-1 ; i++){
+            if(board[i][c] != board[i+1][c]){
+                flag = false;
+                break;
+            }
+        }
+        if(flag == true) return true;
+
+        if(board[0][0] == sym && board[1][1] == sym && board[2][2] ==sym){
+            return true;
+        }
+        if(board[0][2] == sym && board[1][1] == sym && board[2][0] ==sym){
+            return true;
+        }
+        
+        return false;
+    }
+    public static void displayBoard(char[][] board){
+        for(int i = 0; i<board.length ;i++){
+            for (int j = 0; j <board.length; j++) {
+                System.out.print(board[i][j]);
+                
+            }
+            System.out.println();
         }
     }
 }
